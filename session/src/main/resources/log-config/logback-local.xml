@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+  <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+    <encoder>
+      <pattern>${SERVICE_LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <logger additivity="false" level="INFO" name="org">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+  <logger additivity="false" level="DEBUG" name="com.skp.air">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+  <logger name="com.netflix" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+
+  <root level="DEBUG">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+</included>
+
+
+
+
