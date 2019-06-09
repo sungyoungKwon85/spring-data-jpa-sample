@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("local")
 @Ignore
-public class RedisTest {
+public class RedisExtendsCurdRepositoryTest {
 
 
     @Autowired

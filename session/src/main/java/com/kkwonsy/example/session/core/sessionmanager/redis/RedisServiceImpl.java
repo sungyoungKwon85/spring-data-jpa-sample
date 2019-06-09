@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import com.kkwonsy.example.session.core.sessionmanager.model.SessionKey;
 import com.kkwonsy.example.session.core.sessionmanager.redis.domain.SessionRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class RedisServiceImpl<T extends Serializable> implements SessionRepository<T> {
 
-    static final Duration DEFAULT_DURATION = Duration.ofMinutes(10);
+    private static final Duration DEFAULT_DURATION = Duration.ofMinutes(10);
 
-    private RedisTemplate redisTemplate;
+    private final RedisTemplate<SessionKey, T> redisTemplate;
 
     @Autowired
     public RedisServiceImpl(RedisTemplate redisTemplate) {
@@ -27,37 +28,28 @@ public class RedisServiceImpl<T extends Serializable> implements SessionReposito
 
 
     @Override
-    public <S extends T> S save(String id, S data) {
-        redisTemplate.opsForValue().setIfAbsent(id, data, DEFAULT_DURATION);
-        return data;
+    public <S extends T> void save(SessionKey key, S data) {
+        redisTemplate.opsForValue().set(key, data, DEFAULT_DURATION);
+        log.debug("saved {}", data.toString());
     }
 
     @Override
-    public <S extends T> S save(String id, S data, Duration duration) {
-        redisTemplate.opsForValue().setIfAbsent(id, data, duration);
-        return data;
+    public <S extends T> void save(SessionKey key, S data, Duration duration) {
+        redisTemplate.opsForValue().set(key, data, duration);
+        log.debug("saved {}", data.toString());
     }
 
     @Override
-    public <S extends T> S update(String id, S data) {
-        redisTemplate.opsForValue().set(id, data, DEFAULT_DURATION);
-        return data;
-    }
-
-    @Override
-    public <S extends T> S update(String id, S data, Duration duration) {
-        redisTemplate.opsForValue().set(id, data, duration);
-        return data;
-    }
-
-    @Override
-    public Optional<T> findById(String id) {
-        Optional obj = Optional.ofNullable(redisTemplate.opsForValue().get(id));
+    public Optional<T> findById(SessionKey key) {
+        Optional<T> obj = Optional.ofNullable(redisTemplate.opsForValue().get(key));
+        log.debug("found {}", obj.toString());
         return obj;
     }
 
     @Override
-    public void deleteOne(String id) {
-        redisTemplate.delete(id);
+    public void deleteOne(SessionKey key) {
+        redisTemplate.delete(key);
+        log.debug("deleted by id: {}", key);
     }
+
 }
