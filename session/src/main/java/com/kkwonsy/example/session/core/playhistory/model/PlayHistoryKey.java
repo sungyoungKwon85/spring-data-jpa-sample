@@ -1,4 +1,4 @@
-package com.kkwonsy.example.session.core.sessionmanager.model;
+package com.kkwonsy.example.session.core.playhistory.model;
 
 
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @Builder
 @Getter
 @ToString
-public class SessionKey implements Serializable {
+public class PlayHistoryKey implements Serializable {
 
     private String play;
     private String deviceId;

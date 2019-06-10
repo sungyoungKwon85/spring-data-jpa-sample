@@ -10,8 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.kkwonsy.example.session.core.sessionmanager.model.SessionKey;
-import com.kkwonsy.example.session.core.sessionmanager.redis.RedisServiceImpl;
+import com.kkwonsy.example.session.core.playhistory.model.PlayHistoryKey;
+import com.kkwonsy.example.session.core.playhistory.redis.service.RedisServiceImpl;
 import com.kkwonsy.example.session.model.SamplePojo;
 import com.kkwonsy.example.session.service.session.Entity;
 
@@ -32,8 +32,7 @@ public class RedisServiceImplTest {
     @Autowired
     private RedisServiceImpl<SamplePojo> redisRepositorySamplePojo;
 
-
-    private final SessionKey redisKey = SessionKey.builder()
+    private final PlayHistoryKey redisKey = PlayHistoryKey.builder()
         .play("pororo")
         .deviceId("nu110_2123")
         .customId("playlist")

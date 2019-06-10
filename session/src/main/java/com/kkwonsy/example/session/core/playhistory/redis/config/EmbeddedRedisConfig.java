@@ -1,4 +1,4 @@
-package com.kkwonsy.example.session.core.sessionmanager.redis.config;
+package com.kkwonsy.example.session.core.playhistory.redis.config;
 
 import java.io.IOException;
 import javax.annotation.PostConstruct;

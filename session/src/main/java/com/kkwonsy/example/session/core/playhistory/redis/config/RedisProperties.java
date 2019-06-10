@@ -1,4 +1,4 @@
-package com.kkwonsy.example.session.core.sessionmanager.redis.config;
+package com.kkwonsy.example.session.core.playhistory.redis.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

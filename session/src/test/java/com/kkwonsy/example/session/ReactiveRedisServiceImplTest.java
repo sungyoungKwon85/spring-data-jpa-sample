@@ -10,8 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.kkwonsy.example.session.core.sessionmanager.model.SessionKey;
-import com.kkwonsy.example.session.core.sessionmanager.redis.ReactiveRedisServiceImpl;
+import com.kkwonsy.example.session.core.playhistory.model.PlayHistoryKey;
+import com.kkwonsy.example.session.core.playhistory.redis.service.ReactiveRedisServiceImpl;
 import com.kkwonsy.example.session.model.SamplePojo;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +29,7 @@ public class ReactiveRedisServiceImplTest {
     @Autowired
     private ReactiveRedisServiceImpl<SamplePojo> redisRepositoryPojo;
 
-    private final SessionKey id = SessionKey.builder()
+    private final PlayHistoryKey id = PlayHistoryKey.builder()
         .play("pororo")
         .deviceId("nu110_2123")
         .customId("playlist")

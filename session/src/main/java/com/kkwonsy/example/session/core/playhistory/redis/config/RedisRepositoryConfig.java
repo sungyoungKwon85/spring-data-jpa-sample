@@ -1,4 +1,4 @@
-package com.kkwonsy.example.session.core.sessionmanager.redis.config;
+package com.kkwonsy.example.session.core.playhistory.redis.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
