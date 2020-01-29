@@ -1,7 +1,0 @@
-
-spring:
-  session:
-    store-type: none
-  redis:
-    host: 172.21.112.186
-    port: 6379
