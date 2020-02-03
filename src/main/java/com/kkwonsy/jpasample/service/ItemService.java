@@ -1,14 +1,12 @@
 package com.kkwonsy.jpasample.service;
 
-import java.util.List;
-
+import com.kkwonsy.jpasample.domain.item.Item;
+import com.kkwonsy.jpasample.repository.ItemRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kkwonsy.jpasample.domain.item.Item;
-import com.kkwonsy.jpasample.repository.ItemRepository;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,4 +28,16 @@ public class ItemService {
         return itemRepository.findOne(itemId);
     }
 
+
+    // tip 준영속성 엔티티를 update하는 방법! dirty checking
+    @Transactional
+    public void updateItem(Long itemId, String name, int price, int stockQuantity) {
+        Item findItem = itemRepository.findOne(itemId);
+
+        // tip 사실 set을 막 깔지말고 의미있는 메서드를 만들어서 쓰자 (entity에다가)
+        // 너무 많으면 DTO 하나 만들자~
+        findItem.setName(name);
+        findItem.setPrice(price);
+        findItem.setStockQuantity(stockQuantity);
+    }
 }
