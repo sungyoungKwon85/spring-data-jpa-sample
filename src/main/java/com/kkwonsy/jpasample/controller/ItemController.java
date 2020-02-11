@@ -69,20 +69,39 @@ public class ItemController {
     }
 
     @PostMapping("/items/{itemId}/edit")
-    public String updateItem(@ModelAttribute("form") BookForm form) { // tip form에서 id가 와서 PathVariable을 없앰
-        Book book = new Book();
+    public String updateItem(@PathVariable("itemId") Long itemId, @ModelAttribute("form") BookForm form) {
         // tip Id가 조작되서 넘어오는 경우 위험함, 취약점, 따라서 뒷단에서 유저가 이 아이템에 권한이 있는지 체크를 해줘야 한다
-        book.setId(form.getId());
-        book.setName(form.getName());
-        book.setPrice(form.getPrice());
-        book.setStockQuantity(form.getStockQuantity());
-        book.setAuthor(form.getAuthor());
-        book.setIsbn(form.getIsbn());
+        // tip Controller에서 만들지 말자
+//        Book book = new Book();
+//        book.setId(form.getId());
+//        book.setName(form.getName());
+//        book.setPrice(form.getPrice());
+//        book.setStockQuantity(form.getStockQuantity());
+//        book.setAuthor(form.getAuthor());
+//        book.setIsbn(form.getIsbn());
+
 
         // tip saveItem은 repository의 save로 넘어감
         // tip id가 있기 때문에 merge를 탄다. merge가 뭐징?? (실무에서 쓸일이 별로 없다는데?)
 
-        itemService.saveItem(book);
+        // 해당 객체는 이미 DB에 한번 저장되어서 식별자가 존재한다. -> 준영속 엔티티다
+        // 준영속 엔티티는 영속성 컨텍스트가 더는 '관리하지 않는' 엔티티를 말한다
+        // book 객체는 임의로 만들어낸 엔티티인데 기존 식별자를 가지고 있어서 준영속 엔티티이다
+
+        // 준영속 엔티티를 수정하는 방법은 두가지.
+        // 1. 변경 감지기능(그래서 set*("....") 로 했다고해서 dirty checking이 되지 않는다. 따로 해줄게 있음)
+        //     ItemService.updateItem 참고
+        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
+        // 2. merge 사용
+        // 1차캐시에서 찾음 -> 없으면 DB에서 찾음 -> 1차캐시에 넣음 -> 값 바꿈 -> 반환
+        // 주의점: 반환된 객체가 영속성 컨텍스트로 안들어옴.
+//        itemService.saveItem(book);
+
+        // 변경감지를 사용하면 원하는거만 바꿀 수 있는데
+        // 병합은 모든 속성이 바뀜. 'null'로 바뀔 위험이 있음
+        // -> dirty checking을 사용하자~~~
+
+
         return "redirect:/items";
     }
 }
