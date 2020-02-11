@@ -1,8 +1,5 @@
 package com.kkwonsy.jpasample.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.kkwonsy.jpasample.domain.Delivery;
 import com.kkwonsy.jpasample.domain.Member;
 import com.kkwonsy.jpasample.domain.Order;
@@ -11,8 +8,12 @@ import com.kkwonsy.jpasample.domain.item.Item;
 import com.kkwonsy.jpasample.repository.ItemRepository;
 import com.kkwonsy.jpasample.repository.MemberRepository;
 import com.kkwonsy.jpasample.repository.OrderRepository;
-
+import com.kkwonsy.jpasample.repository.OrderSearch;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -69,9 +70,9 @@ public class OrderService {
     /**
      * 검색
      */
-//    public List<Order> findOrders(OrderSearch orderSearch) {
-//        return orderRepository.findAll(orderSearch);
-//    }
+    public List<Order> findOrders(OrderSearch orderSearch) {
+        return orderRepository.findAll(orderSearch);
+    }
 
     // tip 참고
     // 비지니스 로직을 대부분 엔티티로 넘겼다
