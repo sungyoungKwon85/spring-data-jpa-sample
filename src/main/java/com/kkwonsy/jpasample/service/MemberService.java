@@ -1,14 +1,12 @@
 package com.kkwonsy.jpasample.service;
 
-import java.util.List;
-
+import com.kkwonsy.jpasample.domain.Member;
+import com.kkwonsy.jpasample.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kkwonsy.jpasample.domain.Member;
-import com.kkwonsy.jpasample.repository.MemberRepository;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Service
 // tip JPA의 모든 데이터 변경은 같은 트랙잭션안에서 실행되어야 한다.
@@ -68,4 +66,15 @@ public class MemberService {
 
     }
 
+    /**
+     * 회원 정보 수정
+     */
+    @Transactional
+    public void update(Long id, String name) {
+        Member one = memberRepository.findOne(id); // tip 영속성 컨텍스트에서 가져온다!
+        one.setName(name); // tip 변경감지!!
+
+        // tip Member를 return 해도 되는데 select와 update를 철저히 분리하는 스타일임
+        // id 정도만 반환
+    }
 }

@@ -1,13 +1,11 @@
 package com.kkwonsy.jpasample.repository;
 
-import java.util.List;
-import javax.persistence.EntityManager;
-
+import com.kkwonsy.jpasample.domain.Order;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import com.kkwonsy.jpasample.domain.Order;
-
-import lombok.RequiredArgsConstructor;
+import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -35,6 +33,7 @@ public class OrderRepository {
 //            .setMaxResults(1000)
 //            .getResultList();
         // -> QueryDSL!! 2장 강의에서....-_-
-        return null;
+        return em.createQuery("select o from Order o")
+                .getResultList();
     }
 }
