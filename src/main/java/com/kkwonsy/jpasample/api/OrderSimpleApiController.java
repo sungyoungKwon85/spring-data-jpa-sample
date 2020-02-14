@@ -1,16 +1,14 @@
 package com.kkwonsy.jpasample.api;
 
-import com.kkwonsy.jpasample.domain.Address;
 import com.kkwonsy.jpasample.domain.Order;
-import com.kkwonsy.jpasample.domain.OrderStatus;
 import com.kkwonsy.jpasample.repository.OrderRepository;
 import com.kkwonsy.jpasample.repository.OrderSearch;
-import lombok.Data;
+import com.kkwonsy.jpasample.repository.order.simplequery.OrderSimpleQueryDto;
+import com.kkwonsy.jpasample.repository.order.simplequery.OrderSimpleQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +23,7 @@ import java.util.stream.Collectors;
 public class OrderSimpleApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderSimpleQueryRepository orderSimpleQueryRepository;
 
     /**
      * V1. 엔티티 직접 노출
@@ -56,35 +55,40 @@ public class OrderSimpleApiController {
         return all;
     }
 
+    // tip 대부분 요렇게 하면 되는데 N+1문제가 발생하면 v3으로 가자
+
     /**
      * V2. 엔티티를 조회해서 DTO로 변환(fetch join 사용X)
      * - 단점: 지연로딩으로 쿼리 N번 호출
+     * order를 가지고 오고, stream으로 loop를 돌리면서 member row 수만큼 N번 호출되어 버림
+     * --> 1(order) + N(member) + M(delivery) 번
+     * EAGER를 쓰면? EAGER는 더 위험함(예측이 어려움)
      */
     @GetMapping("/api/v2/simple-orders")
-    public List<SimpleOrderDto> ordersV2() {
+    public List<OrderSimpleQueryDto> ordersV2() {
         List<Order> orders = orderRepository.findAll(new OrderSearch());
-        List<SimpleOrderDto> result = orders.stream()
-                .map(o -> new SimpleOrderDto(o))
+        List<OrderSimpleQueryDto> result = orders.stream()
+                .map(OrderSimpleQueryDto::new)
                 .collect(Collectors.toList());
         return result;
     }
 
-    @Data
-    static class SimpleOrderDto {
-        private Long orderId;
-        private String name;
-        private LocalDateTime orderDate;
-        private OrderStatus orderStatus;
-        private Address address;
+    // tip fetch join으로 성능 최적화
+    @GetMapping("/api/v3/simple-orders")
+    public List<OrderSimpleQueryDto> ordersV3() {
+        // tip N+1 문제를 어떻게 해결할지?
+        // query 한방에 해결되었음!!
+        List<Order> orders = orderRepository.findAllWithMemberDelivery();
 
-        public SimpleOrderDto(Order order) {
-            orderId = order.getId();
-            name = order.getMember().getName();
-            orderDate = order.getOrderDate();
-            orderStatus = order.getStatus();
-            address = order.getMember().getAddress();
-        }
+        List<OrderSimpleQueryDto> result = orders.stream()
+                .map(OrderSimpleQueryDto::new)
+                .collect(Collectors.toList());
+        return result;
     }
 
-
+    // tip V2, V3 다 안되면 얘를 선택하자
+    @GetMapping("/api/v4/simple-orders")
+    public List<OrderSimpleQueryDto> ordersV4() {
+        return orderSimpleQueryRepository.findOrderDtos();
+    }
 }

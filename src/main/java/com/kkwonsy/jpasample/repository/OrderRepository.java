@@ -36,4 +36,16 @@ public class OrderRepository {
         return em.createQuery("select o from Order o")
                 .getResultList();
     }
+
+    // tip
+    // member랑 delivery가 LAZY로 되어 있는데 fetch join을 활용하면 LAZY를 무시하고 한방에 다 가져오는 것이다.
+    // JPA에만 있는 문법임
+    // 실무에서 자주 사용함. 꼭 이해할 것
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
 }

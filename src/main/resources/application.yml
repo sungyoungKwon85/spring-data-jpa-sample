@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: create # tip 운영환경서 ㄴㄴ
+      ddl-auto: create-drop # tip 운영환경서 ㄴㄴ
     properties:
       hibernate:
         show_sql: true # tip 운영환경서 ㄴㄴ
