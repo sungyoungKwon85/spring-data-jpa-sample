@@ -11,6 +11,7 @@ spring:
       hibernate:
         show_sql: true # tip 운영환경서 ㄴㄴ
         format_sql: true
+        default_batch_fetch_size: 1000 # tip N+1문제점, toOne 관계 패치조인 최적화에 사용
     database-platform: org.hibernate.dialect.H2Dialect
 logging:
   level:
