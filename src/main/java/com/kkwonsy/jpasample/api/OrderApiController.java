@@ -6,6 +6,8 @@ import com.kkwonsy.jpasample.domain.OrderItem;
 import com.kkwonsy.jpasample.domain.OrderStatus;
 import com.kkwonsy.jpasample.repository.OrderRepository;
 import com.kkwonsy.jpasample.repository.OrderSearch;
+import com.kkwonsy.jpasample.repository.order.query.OrderQueryDto;
+import com.kkwonsy.jpasample.repository.order.query.OrderQueryRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class OrderApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
 
     // tip 노출하면 안되는 엔티티 노출 예
@@ -61,6 +64,12 @@ public class OrderApiController {
                 .map(o -> new OrderDto(o))
                 .collect(Collectors.toList());
         return result;
+    }
+
+    @GetMapping("/api/v4/orders")
+    public List<OrderQueryDto> ordersV4() {
+        List<OrderQueryDto> orderQueryDtos = orderQueryRepository.findOrderQueryDtos();
+        return orderQueryDtos;
     }
 
     @Getter
